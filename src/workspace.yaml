@@ -1,0 +1,5 @@
+load_from:
+  - python_file:
+      relative_path: repo/__init__.py
+      attribute: DagsterMVP
+      location_name: repo
