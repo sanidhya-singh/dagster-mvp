@@ -1,0 +1,98 @@
+version: '3.1'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data 
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster 
+    ports:
+      - 5432:5432
+    networks:
+      - docker_dagster
+
+  dagit:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: dagit
+    image: dagster_image
+    restart: always
+    entrypoint: 
+      - dagit
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3000"
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster
+      POSTGRES_HOSTNAME: postgres
+      POSTGRES_PORT: 5432
+      DAGSTER_CURRENT_IMAGE: "dagster_image"
+      DAGSTER_MAX_CONCURRENT_RUNS: 5
+    volumes:
+      - .:/opt/app/dagster_mvp
+    networks:
+      - docker_dagster
+
+  dagster_daemon:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: daemon
+    image: dagster_image
+    restart: always
+    entrypoint: 
+      - dagster-daemon
+      - run
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster
+      POSTGRES_HOSTNAME: postgres
+      POSTGRES_PORT: 5432
+      DAGSTER_CURRENT_IMAGE: "dagster_image"
+      DAGSTER_MAX_CONCURRENT_RUNS: 5
+    volumes:
+      - .:/opt/app/dagster_mvp
+    networks:
+      - docker_dagster
+  
+  dagster_user_code:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: usercode
+    image: dagster_image
+    restart: always
+    entrypoint: 
+      - dagster
+      - api
+      - grpc
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "4000"
+    environment:
+      POSTGRES_USER: dagster
+      POSTGRES_PASSWORD: dagster
+      POSTGRES_HOSTNAME: postgres
+      POSTGRES_PORT: 5432
+      DAGSTER_CURRENT_IMAGE: "dagster_image"
+      DAGSTER_MAX_CONCURRENT_RUNS: 5
+    volumes:
+      - .:/opt/app/dagster_mvp
+    networks:
+      - docker_dagster
+
+networks:
+  docker_dagster:
+    driver: bridge
+    name: docker_dagster
