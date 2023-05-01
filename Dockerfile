@@ -15,12 +15,10 @@ WORKDIR /opt/app/dagster_mvp
 RUN apt-get update -y && \
  apt-get install sudo -y && \
  sudo apt-get install curl -y && \
- python -m pip install --upgrade pip && \
- python -m pip install setuptools wheel -- upgrade && \
- pip install -r requirements.txt
+ python -m pip install -r requirements.txt
 
 # change working directory to src folder
 WORKDIR /opt/app/dagster_mvp/src
 
 # set DAGSTER_HOME environment variable to the DEV directory
-ENV DAGSTER_HOME /opt/app/dagster_mvp/src/dagster_home_dir
+ENV DAGSTER_HOME /opt/app/dagster_mvp/src/dagster_home
