@@ -1,0 +1,3 @@
+dagit==1.3.2
+dagster==1.3.2
+dagster-graphql==1.3.2
