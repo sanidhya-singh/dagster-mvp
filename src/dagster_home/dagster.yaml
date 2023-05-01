@@ -1,0 +1,74 @@
+telemetry:
+  enabled: false
+
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir:
+      env: DAGSTER_HOME
+
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+  config:
+    max_concurrent_runs:
+      env: DAGSTER_MAX_CONCURRENT_RUNS
+
+event_log_storage:
+  module: dagster_postgres.event_log
+  class: PostgresEventLogStorage
+  config:
+    postgres_db:
+      username:
+        env: POSTGRES_USER
+      password:
+        env: POSTGRES_PASSWORD
+      hostname:
+        env: POSTGRES_HOSTNAME
+      db_name: template1
+      port:
+        env: POSTGRES_PORT
+
+run_storage:
+  module: dagster_postgres.run_storage
+  class: PostgresRunStorage
+  config:
+    postgres_db:
+      username:
+        env: POSTGRES_USER
+      password:
+        env: POSTGRES_PASSWORD
+      hostname:
+        env: POSTGRES_HOSTNAME
+      db_name: template1
+      port:
+        env: POSTGRES_PORT
+
+schedule_storage:
+  module: dagster_postgres.schedule_storage
+  class: PostgresScheduleStorage
+  config:
+    postgres_db:
+      username:
+        env: POSTGRES_USER
+      password:
+        env: POSTGRES_PASSWORD
+      hostname:
+        env: POSTGRES_HOSTNAME
+      db_name: template1
+      port:
+        env: POSTGRES_PORT
+
+retention:
+  schedule:
+    purge_after_days: 7
+  sensor:
+    purge_after_days:
+      skipped: 1
+      failure: -1
+      success: -1
+
+sensors:
+  use_threads: true
+  num_workers: 2
