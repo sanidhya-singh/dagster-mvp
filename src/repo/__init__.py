@@ -1,7 +1,7 @@
-from dagster import repository
+from dagster import Definitions
 from repo.jobs import mvp_job
 
 
-@repository
-def DagsterMVP():
-    return [mvp_job]
+DagsterMVP = Definitions(
+    jobs = [mvp_job]
+)
