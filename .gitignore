@@ -1,7 +1,6 @@
 *.DS_Store
 *.pyc
 
-
 src/dagster_home/**
 src/dagster_home/**/*
 !src/dagster_home/dagster.yaml
