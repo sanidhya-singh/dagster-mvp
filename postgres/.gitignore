@@ -1,0 +1,4 @@
+!data
+!config/pg_hba.conf
+data/**
+data/**/*
